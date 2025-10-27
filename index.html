@@ -3,215 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Financeiro Interativo</title>
+    <title>Meu Controle Financeiro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         :root {
-            --cor-fundo: #f4f7fa;
-            --cor-fundo-card: #ffffff;
-            --cor-texto: #333;
-            --cor-texto-secundaria: #555;
-            --cor-sombra: rgba(0, 0, 0, 0.08);
-            --cor-receita: #28a745;
-            --cor-despesa: #dc3545;
-            --cor-saldo: #007bff;
-            --cor-borda: #eef;
-            --cor-editavel: #fff9e6;
-            --cor-botao-update: #007bff;
-            --cor-botao-add: #28a745;
-            --cor-botao-image: #6f42c1; /* Cor roxa para o botão de imagem */
+            /* Cores Primárias */
+            --primary-dark: #2c3e50; /* Azul escuro quase preto */
+            --primary-medium: #34495e; /* Azul escuro */
+            --primary-light: #ecf0f1; /* Cinza bem claro */
+            --accent-green: #2ecc71; /* Verde esmeralda */
+            --accent-red: #e74c3c; /* Vermelho forte */
+            --accent-blue: #3498db; /* Azul turquesa */
+            --accent-orange: #f39c12; /* Laranja abóbora */
+            --accent-purple: #9b59b6; /* Roxo */
+
+            /* Cores de Fundo e Cards */
+            --bg-body: #f7f9fc; /* Fundo do corpo */
+            --bg-card: #ffffff; /* Fundo dos cards */
+
+            /* Cores de Texto */
+            --text-main: #2c3e50; /* Texto principal */
+            --text-secondary: #7f8c8d; /* Texto secundário */
+            --text-light: #ecf0f1; /* Texto claro */
+
+            /* Sombras e Bordas */
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+            --border-color: #e0e6ed;
+
+            /* Cores para Células Editáveis */
+            --editable-bg: #fffbe6;
+            --editable-border: #f39c12;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--cor-fundo);
-            color: var(--cor-texto);
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
+            line-height: 1.6;
         }
 
-        h1, h2, h3 {
-            color: var(--cor-texto-secundaria);
-            border-bottom: 2px solid var(--cor-borda);
-            padding-bottom: 10px;
+        h1 {
+            font-size: 2.2em; /* Reduzido para mobile */
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
-        
+
         h2 {
+            font-size: 1.5em; /* Reduzido para mobile */
+            color: var(--primary-medium);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1.1em; /* Reduzido para mobile */
+            color: var(--text-secondary);
+            margin: 0 0 10px 0;
+            font-weight: 500;
         }
 
         main {
             max-width: 1200px;
-            margin: auto;
+            margin: 0 auto;
+            padding: 0 10px; /* Reduzido padding lateral */
         }
 
-        /* Container de Controles */
+        /* Controles e Botões */
         .controls-container {
-            background-color: var(--cor-fundo-card);
-            padding: 20px;
+            background: var(--bg-card);
+            padding: 20px; /* Reduzido padding */
             border-radius: 12px;
-            box-shadow: 0 4px 12px var(--cor-sombra);
+            box-shadow: 0 8px 20px var(--shadow-medium);
             margin-bottom: 30px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            flex-direction: column; /* Padrão coluna para mobile */
             gap: 20px;
+            align-items: flex-start;
         }
         
         .instructions {
-            flex-basis: 400px;
             flex-grow: 1;
         }
 
-        .instructions h3 {
-            margin: 0 0 10px 0;
-            border: none;
+        .instructions p {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin: 0;
         }
 
         .action-buttons {
             display: flex;
             gap: 15px;
-            flex-wrap: wrap;
+            flex-wrap: wrap; 
+            justify-content: flex-start;
+            width: 100%; 
         }
 
         .action-buttons button {
             color: white;
             border: none;
-            padding: 15px 25px;
+            padding: 12px 20px; /* Reduzido padding */
             font-size: 1em;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px var(--shadow-light);
+            flex-grow: 1; 
         }
 
         #updateButton {
-            background-color: var(--cor-botao-update);
+            background-color: var(--accent-blue);
         }
         
         #updateButton:hover {
-            background-color: #0056b3;
-        }
-
-        #generateImageButton {
-            background-color: var(--cor-botao-image);
-        }
-
-        #generateImageButton:hover {
-            background-color: #5a369e;
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--shadow-medium);
         }
         
         .add-row {
-            background-color: var(--cor-botao-add);
+            background-color: var(--accent-green);
             color: white;
             border: none;
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-weight: 700;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 38px;
+            height: 38px;
             cursor: pointer;
             transition: background-color 0.2s ease;
+            box-shadow: 0 3px 8px var(--shadow-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0; 
         }
         
         .add-row:hover {
-            background-color: #218838;
+            background-color: #27ae60;
+            transform: translateY(-1px);
         }
 
-        /* Container dos KPIs */
+        /* Cards de KPIs */
         .kpi-container {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr; /* 1 coluna por padrão */
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        .kpi-card {
-            flex: 1;
-            min-width: 250px;
-            background-color: var(--cor-fundo-card);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px var(--cor-sombra);
-            border: 1px solid var(--cor-borda);
+        @media (min-width: 600px) {
+            .kpi-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Volta ao auto-fit */
+            }
         }
 
-        .kpi-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-            text-transform: uppercase;
-            color: #777;
+
+        .kpi-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #fefefe 100%);
+            padding: 20px; /* Reduzido padding */
+            border-radius: 12px;
+            box-shadow: 0 8px 20px var(--shadow-light);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px var(--shadow-medium);
         }
 
         .kpi-card .valor {
-            font-size: 2.2em;
-            font-weight: 600;
+            font-size: 2.2em; /* Reduzido para mobile */
+            font-weight: 700;
+            margin-top: 10px;
+            line-height: 1.2;
         }
 
-        .kpi-card .valor.receita { color: var(--cor-receita); }
-        .kpi-card .valor.despesa { color: var(--cor-despesa); }
-        .kpi-card .valor.saldo { color: var(--cor-saldo); }
-        .kpi-card .alerta { color: var(--cor-despesa); font-size: 0.9em; font-weight: 500; margin-top: 10px; }
+        .kpi-card .valor.receita { color: var(--accent-green); }
+        .kpi-card .valor.despesa { color: var(--accent-red); }
+        .kpi-card .valor.saldo { color: var(--accent-blue); }
+        .kpi-card .alerta { 
+            color: var(--accent-red); 
+            font-size: 0.9em; 
+            font-weight: 500; 
+            margin-top: 15px; 
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
 
-        /* Container dos Gráficos */
+        /* Gráficos */
         .chart-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr; /* Padrão 1 coluna para celular */
             gap: 20px;
             margin-bottom: 30px;
         }
         
-        .chart-wrapper {
-            background-color: var(--cor-fundo-card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px var(--cor-sombra);
-            border: 1px solid var(--cor-borda);
+        @media (min-width: 900px) {
+            .chart-container {
+                grid-template-columns: 1fr 1fr; /* 2 colunas em telas maiores */
+            }
         }
 
-        /* Tabela Detalhada */
+        .chart-wrapper {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px var(--shadow-light);
+            border: 1px solid var(--border-color);
+            /* Removido position e min-height daqui */
+        }
+        
+        /* --- ESTA É A CORREÇÃO --- */
+        .chart-canvas-container {
+            position: relative; /* Obrigatório para Chart.js */
+            height: 300px;     /* Altura do gráfico no celular */
+        }
+        
+        @media (min-width: 768px) {
+            .chart-canvas-container {
+                height: 350px; /* Altura maior no desktop */
+            }
+        }
+        /* --- FIM DA CORREÇÃO --- */
+
+        /* Tabelas */
         .table-container {
-            overflow-x: auto;
+            overflow-x: auto; /* Permite rolagem horizontal em tabelas grandes no mobile */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: var(--cor-fundo-card);
+            background-color: var(--bg-card);
             border-radius: 12px;
-            box-shadow: 0 4px 12px var(--cor-sombra);
-            border: 1px solid var(--cor-borda);
-            overflow: hidden;
+            box-shadow: 0 8px 20px var(--shadow-light);
+            border: 1px solid var(--border-color);
+            overflow: hidden; 
             margin-bottom: 30px;
+            font-size: 0.9em; /* Reduzido para mobile */
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: 10px 12px; /* Reduzido padding */
             text-align: left;
-            border-bottom: 1px solid var(--cor-borda);
+            border-bottom: 1px solid var(--border-color);
         }
 
         th {
-            background-color: #f9faff;
-            font-size: 0.9em;
+            background-color: var(--primary-light);
+            font-size: 0.8em; /* Reduzido para mobile */
             text-transform: uppercase;
+            color: var(--primary-medium);
+            font-weight: 600;
         }
         
         /* Células Editáveis */
         td[contenteditable="true"] {
-            background-color: var(--cor-editavel);
+            background-color: var(--editable-bg);
             cursor: text;
-            outline-color: var(--cor-botao-update);
+            outline: 1px solid var(--editable-border); 
+            border-radius: 4px; 
+            transition: background-color 0.2s ease;
         }
+
+        td[contenteditable="true"]:focus {
+            background-color: #fffaf0; 
+            outline: 2px solid var(--accent-orange);
+        }
+
 
         td.valor-cell {
             text-align: right;
             font-weight: 500;
-            font-family: "Courier New", Courier, monospace;
+            font-family: 'Poppins', sans-serif; 
+            color: var(--primary-dark);
+            min-width: 80px; /* Largura mínima para valores */
         }
 
         tbody tr:last-child td {
@@ -219,29 +305,57 @@
         }
         
         tbody tr.subtotal td {
-            background-color: #f9faff;
+            background-color: var(--primary-light);
             font-weight: 700;
-            font-size: 1.1em;
+            font-size: 1.05em; /* Reduzido */
+            color: var(--primary-dark);
         }
         
-        .col-categoria { width: 25%; }
-        .col-item { width: 45%; }
-        .col-valor { width: 30%; }
+        .col-categoria { min-width: 120px; }
+        .col-item { min-width: 150px; }
+        .col-valor { min-width: 100px; }
 
-        /* Responsividade */
-        @media (max-width: 900px) {
-            .chart-container {
-                grid-template-columns: 1fr;
+        /* Media queries para telas maiores (desktop) */
+        @media (min-width: 768px) {
+            body {
+                padding: 40px;
+            }
+            main {
+                padding: 0 20px;
+            }
+            h1 {
+                font-size: 2.5em;
+                margin-bottom: 40px;
+            }
+            h2 {
+                font-size: 1.6em;
             }
             .controls-container {
-                flex-direction: column;
+                flex-direction: row; 
+                justify-content: space-between;
+                align-items: center;
+                padding: 25px;
             }
             .action-buttons {
-                flex-direction: column;
-                width: 100%;
+                width: auto; 
             }
-            .action-buttons button {
-                width: 100%;
+            .kpi-card {
+                padding: 25px;
+            }
+            .kpi-card .valor {
+                font-size: 2.6em;
+            }
+            table {
+                font-size: 0.95em;
+            }
+            th, td {
+                padding: 12px 15px;
+            }
+            th {
+                font-size: 0.85em;
+            }
+            tbody tr.subtotal td {
+                font-size: 1.1em;
             }
         }
     </style>
@@ -249,31 +363,30 @@
 <body>
 
     <main id="dashboard-content"> 
-        <h1>🏦 Dashboard Financeiro Interativo</h1>
+        <h1>Meu Controle Financeiro</h1>
 
         <section class="controls-container"> 
             <div class="instructions">
                 <h3>Instruções</h3>
-                <p>Clique nas células amarelas para editar. Use o botão <strong>+</strong> para adicionar linhas. Quando terminar, clique em <strong>Atualizar</strong> para ver os gráficos e KPIs.</p>
+                <p>Clique nas células editáveis (fundo claro) para alterar valores. Use <strong>+</strong> para adicionar linhas. Ao terminar, clique em <strong>Atualizar Dashboard</strong>.</p>
             </div>
             <div class="action-buttons">
                 <button id="updateButton">Atualizar Dashboard</button>
-                <button id="generateImageButton">Gerar Imagem do Dashboard</button>
             </div>
         </section>
         
         <section class="kpi-container">
             <div class="kpi-card">
-                <h3>Total Receitas</h3>
+                <h3>Receitas Totais</h3>
                 <div class="valor receita" id="kpi-receita">R$ 0,00</div>
             </div>
             <div class="kpi-card">
-                <h3>Total Despesas</h3>
+                <h3>Despesas Totais</h3>
                 <div class="valor despesa" id="kpi-despesa">R$ 0,00</div>
                 <div class="alerta" id="kpi-alerta">0% da renda</div>
             </div>
             <div class="kpi-card">
-                <h3>Saldo Líquido</h3>
+                <h3>Saldo Mensal</h3>
                 <div class="valor saldo" id="kpi-saldo">R$ 0,00</div>
             </div>
         </section>
@@ -281,11 +394,15 @@
         <section class="chart-container">
             <div class="chart-wrapper">
                 <h2>Composição das Despesas</h2>
-                <canvas id="grafico-despesas"></canvas>
+                <div class="chart-canvas-container">
+                    <canvas id="grafico-despesas"></canvas>
+                </div>
             </div>
             <div class="chart-wrapper">
-                <h2>Visão Geral (Receita x Despesa)</h2>
-                <canvas id="grafico-geral"></canvas>
+                <h2>Visão Geral (Receita vs. Despesa)</h2>
+                <div class="chart-canvas-container">
+                    <canvas id="grafico-geral"></canvas>
+                </div>
             </div>
         </section>
         
@@ -304,28 +421,28 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td contenteditable="true">Receita</td>
-                        <td contenteditable="true">SALARIO DIA 30</td>
+                        <td contenteditable="true">Salário</td>
+                        <td contenteditable="true">Salário Principal</td>
                         <td contenteditable="true" class="valor-cell">5.000,00</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Receita</td>
-                        <td contenteditable="true">VALE DIA 15</td>
+                        <td contenteditable="true">Salário</td>
+                        <td contenteditable="true">Vale Adiantamento</td>
                         <td contenteditable="true" class="valor-cell">4.000,00</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Receita</td>
-                        <td contenteditable="true">(Outra Receita 1)</td>
+                        <td contenteditable="true">Extra</td>
+                        <td contenteditable="true">Renda Extra (freela)</td>
                         <td contenteditable="true" class="valor-cell">900,00</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Receita</td>
-                        <td contenteditable="true">(Outra Receita 2)</td>
+                        <td contenteditable="true">Extra</td>
+                        <td contenteditable="true">Comissão/Bônus</td>
                         <td contenteditable="true" class="valor-cell">1.000,00</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Receita</td>
-                        <td contenteditable="true">TICKET COMPRA</td>
+                        <td contenteditable="true">Benefício</td>
+                        <td contenteditable="true">Ticket Alimentação/Refeição</td>
                         <td contenteditable="true" class="valor-cell">800,00</td>
                     </tr>
                 </tbody>
@@ -351,88 +468,68 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td contenteditable="true">Dívidas</td>
-                        <td contenteditable="true">CONSIGNADO ITAU (17/38)</td>
-                        <td contenteditable="true" class="valor-cell">1.500,00</td>
-                    </tr>
-                    <tr>
-                        <td contenteditable="true">Dívidas</td>
-                        <td contenteditable="true">CONSORCIO</td>
-                        <td contenteditable="true" class="valor-cell">1.115,31</td>
-                    </tr>
-                    <tr>
-                        <td contenteditable="true">Dívidas</td>
-                        <td contenteditable="true">Empréstimo Franklin</td>
-                        <td contenteditable="true" class="valor-cell">847,00</td>
-                    </tr>
-                    <tr>
                         <td contenteditable="true">Moradia</td>
-                        <td contenteditable="true">FAXINEIRA</td>
-                        <td contenteditable="true" class="valor-cell">1.144,00</td>
-                    </tr>
-                    <tr>
-                        <td contenteditable="true">Moradia</td>
-                        <td contenteditable="true">PRESTAÇÃO DA CASA</td>
+                        <td contenteditable="true">Prestação da Casa</td>
                         <td contenteditable="true" class="valor-cell">628,75</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Moradia</td>
-                        <td contenteditable="true">CONDOMINIO</td>
+                        <td contenteditable="true">Condomínio</td>
                         <td contenteditable="true" class="valor-cell">403,14</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Moradia</td>
-                        <td contenteditable="true">IPTU 2025 (28/02)</td>
+                        <td contenteditable="true">Limpeza (Faxineira)</td>
+                        <td contenteditable="true" class="valor-cell">1.144,00</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Moradia</td>
+                        <td contenteditable="true">IPTU (Mensal)</td>
                         <td contenteditable="true" class="valor-cell">95,10</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Mercado</td>
-                        <td contenteditable="true">MERCADO COMPRAS</td>
-                        <td contenteditable="true" class="valor-cell">1.500,00</td>
-                    </tr>
-                    <tr>
-                        <td contenteditable="true">Outros</td>
-                        <td contenteditable="true">VIVARE 1574,00</td>
-                        <td contenteditable="true" class="valor-cell">1.054,00</td>
-                    </tr>
-                    <tr>
-                        <td contenteditable="true">Educação</td>
-                        <td contenteditable="true">Anhanguera</td>
-                        <td contenteditable="true" class="valor-cell">535,60</td>
-                    </tr>
-                    <tr>
-                        <td contenteditable="true">Educação</td>
-                        <td contenteditable="true">Instituto ZELI</td>
-                        <td contenteditable="true" class="valor-cell">180,00</td>
+                        <td contenteditable="true">Contas de Consumo</td>
+                        <td contenteditable="true">Celular (Neia Claro)</td>
+                        <td contenteditable="true" class="valor-cell">47,17</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Contas de Consumo</td>
-                        <td contenteditable="true">CPFL - 24/01</td>
-                        <td contenteditable="true" class="valor-cell">410,77</td>
-                    </tr>
-                    <tr>
-                        <td contenteditable="true">Contas de Consumo</td>
-                        <td contenteditable="true">INTERNET ( CLARO )</td>
+                        <td contenteditable="true">Internet (Claro)</td>
                         <td contenteditable="true" class="valor-cell">128,00</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Contas de Consumo</td>
-                        <td contenteditable="true">CELULAR NEIA ( CLARO )</td>
-                        <td contenteditable="true" class="valor-cell">47,17</td>
+                        <td contenteditable="true">Energia (CPFL)</td>
+                        <td contenteditable="true" class="valor-cell">410,77</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Transporte</td>
-                        <td contenteditable="true">GASOLINA</td>
+                        <td contenteditable="true">Gasolina</td>
                         <td contenteditable="true" class="valor-cell">300,00</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Transporte</td>
-                        <td contenteditable="true">seguro creta</td>
+                        <td contenteditable="true">Seguro Carro (Creta)</td>
                         <td contenteditable="true" class="valor-cell">265,00</td>
                     </tr>
                     <tr>
+                        <td contenteditable="true">Dívidas e Empréstimos</td>
+                        <td contenteditable="true">Consignado Itaú</td>
+                        <td contenteditable="true" class="valor-cell">1.500,00</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Dívidas e Empréstimos</td>
+                        <td contenteditable="true">Consórcio</td>
+                        <td contenteditable="true" class="valor-cell">1.115,31</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Dívidas e Empréstimos</td>
+                        <td contenteditable="true">Empréstimo Franklin</td>
+                        <td contenteditable="true" class="valor-cell">847,00</td>
+                    </tr>
+                    <tr>
                         <td contenteditable="true">Cartões de Crédito</td>
-                        <td contenteditable="true">Cartão Itaú (Vencto dia 08)</td>
+                        <td contenteditable="true">Cartão Itaú</td>
                         <td contenteditable="true" class="valor-cell">307,90</td>
                     </tr>
                     <tr>
@@ -441,19 +538,39 @@
                         <td contenteditable="true" class="valor-cell">130,00</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">PET</td>
-                        <td contenteditable="true">PET MEG</td>
-                        <td contenteditable="true" class="valor-cell">205,00</td>
+                        <td contenteditable="true">Educação</td>
+                        <td contenteditable="true">Mensalidade Anhanguera</td>
+                        <td contenteditable="true" class="valor-cell">535,60</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Educação</td>
+                        <td contenteditable="true">Curso Instituto ZELI</td>
+                        <td contenteditable="true" class="valor-cell">180,00</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Alimentação/Mercado</td>
+                        <td contenteditable="true">Mercado Geral</td>
+                        <td contenteditable="true" class="valor-cell">1.500,00</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">PET</td>
-                        <td contenteditable="true">RAÇÃO MEG</td>
+                        <td contenteditable="true">Ração MEG</td>
                         <td contenteditable="true" class="valor-cell">135,00</td>
                     </tr>
                     <tr>
+                        <td contenteditable="true">PET</td>
+                        <td contenteditable="true">Outros Gastos PET MEG</td>
+                        <td contenteditable="true" class="valor-cell">205,00</td>
+                    </tr>
+                    <tr>
                         <td contenteditable="true">Seguros</td>
-                        <td contenteditable="true">seguro pai</td>
+                        <td contenteditable="true">Seguro de Vida (Pai)</td>
                         <td contenteditable="true" class="valor-cell">100,00</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true">Outros</td>
+                        <td contenteditable="true">VIVARE (Assinatura/Serviço)</td>
+                        <td contenteditable="true" class="valor-cell">1.054,00</td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -471,46 +588,38 @@
         // --- Variáveis Globais ---
         let chartDespesas, chartGeral;
         
-        // Categorias para o gráfico de despesas. 
-        // Adicione aqui se novas categorias forem criadas e você quiser que apareçam no gráfico.
         const labelsDespesas = [
-            'Dívidas', 'Moradia', 'Mercado', 'Outros', 'Educação',
-            'Contas de Consumo', 'Transporte', 'Cartões de Crédito', 'PET', 'Seguros'
+            'Moradia', 'Contas de Consumo', 'Transporte', 'Dívidas e Empréstimos',
+            'Cartões de Crédito', 'Educação', 'Alimentação/Mercado', 'PET', 'Seguros', 'Outros'
         ];
         
-        // Cores para as categorias (correspondendo a labelsDespesas)
         const backgroundColors = [
-            '#d90429', '#e85d04', '#faa307', '#adb5bd', '#9d0208',
-            '#0077b6', '#00b4d8', '#48cae4', '#90e0ef', '#6c757d'
+            '#e74c3c', /* Moradia - Vermelho */
+            '#3498db', /* Contas de Consumo - Azul */
+            '#f39c12', /* Transporte - Laranja */
+            '#9b59b6', /* Dívidas - Roxo */
+            '#2ecc71', /* Cartões - Verde */
+            '#1abc9c', /* Educação - Turquesa */
+            '#e67e22', /* Alimentação/Mercado - Laranja escuro */
+            '#f1c40f', /* PET - Amarelo */
+            '#c0392b', /* Seguros - Vinho */
+            '#7f8c8d'  /* Outros - Cinza */
         ];
 
         // --- Funções Auxiliares ---
 
-        /**
-         * Formata um número para o padrão de moeda BRL (R$ 1.234,56)
-         * @param {number} value - O número a ser formatado
-         * @returns {string} - A string formatada
-         */
         const formatBRL = (value) => new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL'
         }).format(value);
 
-        /**
-         * Converte uma string de moeda (ex: "R$ 1.500,00" ou "1.500,00") para um número (1500.00)
-         * @param {string} text - A string a ser convertida
-         * @returns {number} - O valor numérico
-         */
         const parseCurrency = (text) => {
             if (!text) return 0;
-            return Number(String(text).replace(/[^0-9,]/g, '').replace('.', '').replace(',', '.')) || 0;
+            return Number(String(text).replace(/[^0-9,-]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
         };
 
         // --- Funções Principais ---
 
-        /**
-         * Lê todos os valores das tabelas, atualiza os KPIs e os gráficos.
-         */
         function updateDashboard() {
             // 1. Processar Receitas
             let totalReceitas = 0;
@@ -524,7 +633,7 @@
 
             // 2. Processar Despesas
             const categoryTotals = {};
-            labelsDespesas.forEach(label => categoryTotals[label] = 0); // Inicializa todas as categorias conhecidas com 0
+            labelsDespesas.forEach(label => categoryTotals[label] = 0); 
             
             let totalDespesas = 0;
             const linhasDespesas = document.querySelectorAll('#table-despesas tbody tr');
@@ -537,11 +646,9 @@
                     const categoria = categoriaCell.innerText.trim();
                     const valor = parseCurrency(valorCell.innerText);
                     
-                    if (categoryTotals.hasOwnProperty(categoria)) {
+                    if (labelsDespesas.includes(categoria)) { 
                         categoryTotals[categoria] += valor;
                     } else if (categoria) {
-                        // Se for uma categoria nova, mas não está em labelsDespesas,
-                        // adiciona a "Outros" para não perder o valor no gráfico de rosca.
                         categoryTotals['Outros'] = (categoryTotals['Outros'] || 0) + valor;
                     }
                     totalDespesas += valor;
@@ -565,13 +672,11 @@
             // 6. Atualizar Gráficos
             const newDataDespesas = labelsDespesas.map(label => categoryTotals[label]);
             
-            // Gráfico de Despesas (Rosca)
             if (chartDespesas) {
                 chartDespesas.data.datasets[0].data = newDataDespesas;
                 chartDespesas.update();
             }
 
-            // Gráfico Geral (Barras)
             if (chartGeral) {
                 chartGeral.data.datasets[0].data = [totalReceitas];
                 chartGeral.data.datasets[1].data = [totalDespesas];
@@ -580,10 +685,6 @@
             }
         }
 
-        /**
-         * Adiciona uma nova linha editável a uma tabela.
-         * @param {string} tableId - O ID da tabela (ex: 'table-receitas')
-         */
         function addNewRow(tableId) {
             const table = document.getElementById(tableId);
             const tbody = table.querySelector('tbody');
@@ -593,7 +694,7 @@
             
             const categoriaCell = document.createElement('td');
             categoriaCell.setAttribute('contenteditable', 'true');
-            categoriaCell.innerText = (tableId === 'table-receitas') ? 'Receita' : 'Nova Categoria';
+            categoriaCell.innerText = (tableId === 'table-receitas') ? 'Nova Receita' : 'Nova Categoria';
             
             const itemCell = document.createElement('td');
             itemCell.setAttribute('contenteditable', 'true');
@@ -611,9 +712,6 @@
             tbody.appendChild(newRow);
         }
 
-        /**
-         * Cria as instâncias iniciais dos gráficos.
-         */
         function initializeCharts() {
             // Gráfico 1: Composição das Despesas (Rosca)
             const ctxDespesas = document.getElementById('grafico-despesas').getContext('2d');
@@ -623,7 +721,7 @@
                     labels: labelsDespesas,
                     datasets: [{
                         label: 'Despesas por Categoria',
-                        data: [], // Começa vazio, será preenchido pelo updateDashboard
+                        data: [], 
                         backgroundColor: backgroundColors,
                         borderColor: '#ffffff',
                         borderWidth: 2
@@ -631,6 +729,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false, /* Agora funciona por causa do container */
                     plugins: {
                         legend: { position: 'bottom' },
                         tooltip: {
@@ -655,13 +754,14 @@
                 data: {
                     labels: ['Visão Geral'],
                     datasets: [
-                        { label: 'Receitas', data: [], backgroundColor: 'rgba(40, 167, 69, 0.8)' },
-                        { label: 'Despesas', data: [], backgroundColor: 'rgba(220, 53, 69, 0.8)' },
-                        { label: 'Saldo', data: [], backgroundColor: 'rgba(0, 123, 255, 0.8)' }
+                        { label: 'Receitas', data: [], backgroundColor: 'rgba(46, 204, 113, 0.8)' }, /* Verde */
+                        { label: 'Despesas', data: [], backgroundColor: 'rgba(231, 76, 60, 0.8)' }, /* Vermelho */
+                        { label: 'Saldo', data: [], backgroundColor: 'rgba(52, 152, 219, 0.8)' } /* Azul */
                     ]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false, /* Agora funciona por causa do container */
                     indexAxis: 'y',
                     plugins: {
                         legend: { position: 'bottom' },
@@ -682,62 +782,13 @@
             };
         }
 
-        /**
-         * Gera uma imagem do conteúdo do dashboard e abre em uma nova janela.
-         */
-        function generateDashboardImage() {
-            const dashboardContent = document.getElementById('dashboard-content');
-            const controls = document.querySelector('.controls-container');
-            const addButtons = document.querySelectorAll('.add-row');
-
-            // 1. Esconde os botões e controles
-            if (controls) controls.style.display = 'none';
-            addButtons.forEach(btn => btn.style.display = 'none');
-
-            html2canvas(dashboardContent, {
-                scale: 2, // Aumenta a escala para uma imagem de melhor qualidade
-                logging: false, // Desabilita logs no console
-                useCORS: true, 
-                allowTaint: true,
-                backgroundColor: '#f4f7fa' // Define a cor de fundo
-            }).then(canvas => {
-                // 2. Mostra os controles de volta (MUITO IMPORTANTE)
-                if (controls) controls.style.display = 'flex';
-                addButtons.forEach(btn => btn.style.display = ''); // Reverte ao estilo padrão
-
-                const imgData = canvas.toDataURL('image/png');
-                
-                // Abre a imagem em uma nova aba
-                const newWindow = window.open();
-                newWindow.document.write('<img src="' + imgData + '" alt="Dashboard Financeiro" style="width:100%;">');
-                newWindow.document.title = 'Imagem do Dashboard';
-            }).catch(error => {
-                // 3. Mostra os controles de volta em caso de erro
-                if (controls) controls.style.display = 'flex';
-                addButtons.forEach(btn => btn.style.display = '');
-
-                console.error('Erro ao gerar imagem:', error);
-                alert('Ocorreu um erro ao gerar a imagem do dashboard. Verifique o console para mais detalhes.');
-            });
-        }
-
         // --- Inicialização ---
 
-        // Espera o DOM carregar para rodar o script
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Inicializa os gráficos
             initializeCharts();
-            
-            // 2. Roda o cálculo inicial com os dados da tabela
             updateDashboard();
-            
-            // 3. Adiciona o listener ao botão de Atualizar
             document.getElementById('updateButton').addEventListener('click', updateDashboard);
             
-            // 4. Adiciona o listener ao botão de Gerar Imagem
-            document.getElementById('generateImageButton').addEventListener('click', generateDashboardImage);
-
-            // 5. Adiciona listeners aos botões de Adicionar Linha
             document.querySelectorAll('.add-row').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const tableId = e.target.getAttribute('data-table-id');
